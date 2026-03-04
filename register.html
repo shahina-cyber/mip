@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Complaint - CMS PRO</title>
+
+    <style>
+        :root {
+            --primary: #4e73df;
+            --primary-hover: #2e59d9;
+            --success: #1cc88a;
+            --bg-color: #f8f9fc;
+            --text-color: #333;
+            --gray: #858796;
+            --border-color: #d1d3e2;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background: var(--white);
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .back-link {
+            text-decoration: none;
+            font-size: 14px;
+            color: var(--gray);
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gray);
+            text-transform: uppercase;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #success-message {
+            display: none;
+            text-align: center;
+        }
+
+        .icon-circle {
+            height: 60px;
+            width: 60px;
+            background-color: var(--success);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 20px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            margin-top: 15px;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="form-container">
+
+    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+
+    <div id="complaint-form">
+        <h2>Register Complaint</h2>
+
+        <form onsubmit="handleSubmit(event)">
+            <label>Complaint Title</label>
+            <input type="text" required placeholder="Brief title">
+
+            <label>Category</label>
+            <select required>
+                <option value="">Select Category</option>
+                <option>Academic</option>
+                <option>Hostel</option>
+                <option>Infrastructure</option>
+                <option>Transport</option>
+            </select>
+
+            <label>Description</label>
+            <textarea rows="4" required placeholder="Describe the issue"></textarea>
+
+            <button type="submit">Submit Complaint</button>
+        </form>
+    </div>
+
+    <div id="success-message">
+        <div class="icon-circle">✓</div>
+        <h2 style="color: var(--success);">Submitted!</h2>
+        <p>Your complaint has been registered.</p>
+
+        <button class="btn-outline" onclick="goDashboard()">Go to Dashboard</button>
+    </div>
+
+</div>
+
+<script>
+    function handleSubmit(e) {
+        e.preventDefault();
+        document.getElementById("complaint-form").style.display = "none";
+        document.getElementById("success-message").style.display = "block";
+    }
+
+    function goDashboard() {
+        window.location.href = "dashboard.html";
+    }
+</script>
+
+</body>
+</html>

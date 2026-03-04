@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Complaint</title>
+
+    <style>
+        :root {
+            --primary: #4e73df;
+            --bg-color: #f8f9fc;
+            --white: #ffffff;
+            --gray: #858796;
+            --success: #1cc88a;
+            --warning: #f6c23e;
+            --danger: #e74a3b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 40px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        h2 {
+            margin: 0;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .search-box {
+            padding: 10px 15px;
+            border: 1px solid #d1d3e2;
+            border-radius: 20px;
+            outline: none;
+            width: 250px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 0.15rem 1.75rem rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #f8f9fc;
+            color: var(--primary);
+            font-size: 13px;
+            padding: 18px;
+            text-align: left;
+        }
+
+        td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #e3e6f0;
+            font-size: 15px;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 20px;
+        }
+
+        .status-in-progress { background:#fff4e5; color:#f6c23e; }
+        .status-resolved { background:#e7f9ed; color:#1cc88a; }
+        .status-pending { background:#ffeef0; color:#e74a3b; }
+
+        .id-text {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .btn-back {
+            text-decoration: none;
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .btn-back:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- 🔗 Dashboard link -->
+    <a href="dashboard.html" class="btn-back">← Back to Dashboard</a>
+
+    <div class="header-section">
+        <h2>Track Your Complaints</h2>
+        <input type="text" class="search-box" placeholder="Search by ID or Title...">
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Complaint ID</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="id-text">#101</td>
+                    <td>Classroom Projector Issue</td>
+                    <td><span class="badge status-in-progress">In Progress</span></td>
+                </tr>
+                <tr>
+                    <td class="id-text">#102</td>
+                    <td>Library AC Not Working</td>
+                    <td><span class="badge status-resolved">Resolved</span></td>
+                </tr>
+                <tr>
+                    <td class="id-text">#103</td>
+                    <td>Laboratory Internet Offline</td>
+                    <td><span class="badge status-pending">Pending</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -196,95 +196,46 @@ opacity:0.9;
 </div>
 
 <script type="module">
+  import { database, ref, onValue, update } from "./firebase.js";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  const table = document.getElementById("complaintTable");
+  const totalEl = document.getElementById("total");
+  const pendingEl = document.getElementById("pending");
+  const resolvedEl = document.getElementById("resolved");
 
-const firebaseConfig = {
-apiKey: "AIzaSyDyptaMe1PQZgDNJ2OzUILoAhZTJLbpTro",
-authDomain: "complaint-system-2-8c113.firebaseapp.com",
-databaseURL: "https://complaint-system-2-8c113-default-rtdb.firebaseio.com",
-projectId: "complaint-system-2-8c113",
-storageBucket: "complaint-system-2-8c113.firebasestorage.app",
-messagingSenderId: "220960024495",
-appId: "1:220960024495:web:6c6bafc62a0398d3bf715a"
-};
+  onValue(ref(database, "complaints"), (snapshot) => {
+    table.innerHTML = "";
+    let total = 0, pending = 0, resolved = 0, index = 101;
 
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+    snapshot.forEach((childSnapshot) => {
+      const data = childSnapshot.val();
+      const id = childSnapshot.key;
+      total++;
+      (data.status === "Resolved") ? resolved++ : pending++;
 
-const table = document.getElementById("complaintTable");
+      let statusClass = (data.status === "Resolved") ? "status-resolved" : "status-pending";
+      let actionBtn = (data.status === "Resolved") 
+        ? "<span style='color:#1cc88a;font-weight:bold;'>✔ Resolved</span>" 
+        : `<button onclick="resolveComplaint('${id}')">Resolve</button>`;
 
-const totalEl = document.getElementById("total");
-const pendingEl = document.getElementById("pending");
-const resolvedEl = document.getElementById("resolved");
+      table.innerHTML += `
+        <tr>
+          <td>#${index++}</td>
+          <td>${data.title}</td>
+          <td>${data.category}</td>
+          <td class="${statusClass}">${data.status}</td>
+          <td>${actionBtn}</td>
+        </tr>`;
+    });
 
-const complaintsRef = ref(database,"complaints");
+    totalEl.innerText = total;
+    pendingEl.innerText = pending;
+    resolvedEl.innerText = resolved;
+  });
 
-onValue(complaintsRef,(snapshot)=>{
-
-table.innerHTML="";
-
-let total = 0;
-let pending = 0;
-let resolved = 0;
-let index = 101;
-
-snapshot.forEach((childSnapshot)=>{
-
-const data = childSnapshot.val();
-const id = childSnapshot.key;
-
-total++;
-
-if(data.status=="Resolved"){
-resolved++;
-}else{
-pending++;
-}
-
-let statusClass="status-pending";
-
-if(data.status=="Resolved"){
-statusClass="status-resolved";
-}
-
-let actionBtn="";
-
-if(data.status=="Resolved"){
-actionBtn="<span style='color:#1cc88a;font-weight:bold;'>✔ Resolved</span>";
-}else{
-actionBtn=`<button onclick="resolveComplaint('${id}')">Resolve</button>`;
-}
-
-table.innerHTML += `
-<tr>
-<td>#${index++}</td>
-<td>${data.title}</td>
-<td>${data.category}</td>
-<td class="${statusClass}">${data.status}</td>
-<td>${actionBtn}</td>
-</tr>
-`;
-
-});
-
-totalEl.innerText = total;
-pendingEl.innerText = pending;
-resolvedEl.innerText = resolved;
-
-});
-
-window.resolveComplaint = function(id){
-
-const complaintRef = ref(database,"complaints/"+id);
-
-update(complaintRef,{
-status:"Resolved"
-});
-
-}
-
+  window.resolveComplaint = (id) => {
+    update(ref(database, "complaints/" + id), { status: "Resolved" });
+  };
 </script>
 
 </body>

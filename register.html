@@ -115,57 +115,28 @@ background:var(--primary-hover);
 </div>
 
 <script type="module">
+  import { database, ref, push } from "./firebase.js";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  const form = document.getElementById("complaintForm");
 
-const firebaseConfig = {
-apiKey: "AIzaSyDyptaMe1PQZgDNJ2OzUILoAhZTJLbpTro",
-authDomain: "complaint-system-2-8c113.firebaseapp.com",
-databaseURL: "https://complaint-system-2-8c113-default-rtdb.firebaseio.com",
-projectId: "complaint-system-2-8c113",
-storageBucket: "complaint-system-2-8c113.firebasestorage.app",
-messagingSenderId: "220960024495",
-appId: "1:220960024495:web:6c6bafc62a0398d3bf715a"
-};
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    
+    const complaintData = {
+      title: document.getElementById("title").value,
+      category: document.getElementById("category").value,
+      description: document.getElementById("description").value,
+      status: "Pending",
+      date: new Date().toLocaleString()
+    };
 
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-
-const form = document.getElementById("complaintForm");
-
-form.addEventListener("submit", function(e){
-
-e.preventDefault();
-
-const title = document.getElementById("title").value;
-const category = document.getElementById("category").value;
-const description = document.getElementById("description").value;
-
-const complaintData = {
-title: title,
-category: category,
-description: description,
-status: "Pending",
-date: new Date().toLocaleString()
-};
-
-push(ref(database,"complaints"), complaintData)
-.then(()=>{
-
-alert("✅ Complaint Submitted Successfully");
-
-form.reset();
-
-})
-.catch((error)=>{
-
-alert("Error: "+error.message);
-
-});
-
-});
-
+    push(ref(database, "complaints"), complaintData)
+      .then(() => {
+        alert("✅ Complaint Submitted Successfully");
+        form.reset();
+      })
+      .catch((error) => alert("Error: " + error.message));
+  });
 </script>
 
 </body>

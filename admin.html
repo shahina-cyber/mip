@@ -137,8 +137,7 @@ opacity:0.9;
 
 <div class="sidebar">
 <h2>ADMIN PANEL</h2>
-<a href="#dashboard">Dashboard</a>
-<a href="#complaints">View Complaints</a>
+
 <a href="login.html" style="color:#e74a3b;">Logout</a>
 </div>
 
@@ -196,20 +195,22 @@ opacity:0.9;
 </div>
 
 <script type="module">
-  import { database, ref, onValue, update } from "./firebase.js";
+  import { db, collection, onSnapshot, doc, updateDoc } from "./firebase.js";
 
   const table = document.getElementById("complaintTable");
   const totalEl = document.getElementById("total");
   const pendingEl = document.getElementById("pending");
   const resolvedEl = document.getElementById("resolved");
 
-  onValue(ref(database, "complaints"), (snapshot) => {
+  const complaintsRef = collection(db, "complaints");
+
+  onSnapshot(complaintsRef, (snapshot) => {
     table.innerHTML = "";
     let total = 0, pending = 0, resolved = 0, index = 101;
 
-    snapshot.forEach((childSnapshot) => {
-      const data = childSnapshot.val();
-      const id = childSnapshot.key;
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      const id = docSnap.id;
       total++;
       (data.status === "Resolved") ? resolved++ : pending++;
 
@@ -233,8 +234,12 @@ opacity:0.9;
     resolvedEl.innerText = resolved;
   });
 
-  window.resolveComplaint = (id) => {
-    update(ref(database, "complaints/" + id), { status: "Resolved" });
+  window.resolveComplaint = async (id) => {
+    try {
+      await updateDoc(doc(db, "complaints", id), { status: "Resolved" });
+    } catch (error) {
+      alert("Error updating complaint: " + error.message);
+    }
   };
 </script>
 

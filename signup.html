@@ -1,126 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Signup</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup</title>
 
-<style>
+  <style>
+    body {
+      font-family: Arial;
+      background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: white;
+    }
 
-body{
-font-family:Arial;
-background:linear-gradient(45deg,#0f0c29,#302b63,#24243e);
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
-color:white;
-}
+    .box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 20px;
+      width: 350px;
+      text-align: center;
+    }
 
-.box{
-background:rgba(255,255,255,0.1);
-backdrop-filter:blur(10px);
-padding:40px;
-border-radius:20px;
-width:350px;
-text-align:center;
-}
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
 
-input{
-width:100%;
-padding:12px;
-margin:10px 0;
-border:none;
-border-radius:10px;
-background:rgba(255,255,255,0.2);
-color:white;
-}
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: linear-gradient(to right, #3a7bd5, #00d2ff);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-button{
-width:100%;
-padding:12px;
-margin-top:20px;
-background:linear-gradient(to right,#3a7bd5,#00d2ff);
-border:none;
-border-radius:10px;
-color:white;
-font-weight:bold;
-cursor:pointer;
-}
+    #msg {
+      margin-top: 15px;
+      font-weight: bold;
+    }
 
-#msg{
-margin-top:15px;
-font-weight:bold;
-}
-
-a{
-color:#00d2ff;
-text-decoration:none;
-}
-
-</style>
+    a {
+      color: #00d2ff;
+      text-decoration: none;
+    }
+  </style>
 
 </head>
+
 <body>
 
-<div class="box">
+  <div class="box">
 
-<h2>JOIN US</h2>
+    <h2>JOIN US</h2>
 
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
 
-<button onclick="signup()">CREATE ACCOUNT</button>
+    <button onclick="signup()">CREATE ACCOUNT</button>
 
-<p id="msg"></p>
+    <p id="msg"></p>
 
-<a href="login.html">Already have account? Login</a>
+    <a href="login.html">Already have account? Login</a>
 
-</div>
+  </div>
 
-<script type="module">
+  <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    import { auth, db, createUserWithEmailAndPassword, doc, setDoc } from "./firebase.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAAG2bHKBAYBwoHr1m5RKMpI9HARx0TcWA",
-  authDomain: "cms01-d8400.firebaseapp.com",
-  projectId: "cms01-d8400",
-  storageBucket: "cms01-d8400.firebasestorage.app",
-  messagingSenderId: "761545517220",
-  appId: "1:761545517220:web:07bf15ee4825024fe35e31"
-};
+    window.signup = async function () {
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+      let email = document.getElementById("email").value;
+      let password = document.getElementById("password").value;
 
-window.signup = function(){
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const uid = userCredential.user.uid;
 
-let email=document.getElementById("email").value;
-let password=document.getElementById("password").value;
+        // Create user document in Firestore to store role
+        await setDoc(doc(db, "users", uid), {
+          email: email,
+          role: "student"
+        });
 
-createUserWithEmailAndPassword(auth,email,password)
+        document.getElementById("msg").innerHTML = "Account Created Successfully 😌";
 
-.then((userCredential)=>{
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
 
-document.getElementById("msg").innerHTML="Account Created Successfully 😌";
+      } catch (error) {
+        document.getElementById("msg").innerHTML = error.message;
+      }
 
-setTimeout(()=>{
-window.location.href="login.html";
-},2000);
+    }
 
-})
-
-.catch((error)=>{
-
-document.getElementById("msg").innerHTML=error.message;
-
-});
-
-}
-
-</script>
+  </script>
 </body>
+
 </html>

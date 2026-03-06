@@ -172,12 +172,12 @@
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const uid = userCredential.user.uid;
 
-            // 2. Fetch User Role from Realtime Database
-            const userRef = ref(database, `users/${uid}`);
-            const snapshot = await get(userRef);
+            // 2. Fetch User Role from Firestore Database
+            const userRef = doc(db, "users", uid);
+            const snapshot = await getDoc(userRef);
 
             if (snapshot.exists()) {
-                const userData = snapshot.val();
+                const userData = snapshot.data();
                 
                 // 3. Role Validation
                 if (userData.role === "admin" && !isAdminToggle) {

@@ -1,191 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Track Complaint</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Complaint</title>
 
-<style>
-:root {
---primary: #4e73df;
---bg-color: #f8f9fc;
---white: #ffffff;
---gray: #858796;
---success: #1cc88a;
---warning: #f6c23e;
---danger: #e74a3b;
-}
+  <style>
+    :root {
+      --primary: #4e73df;
+      --bg-color: #f8f9fc;
+      --white: #ffffff;
+      --gray: #858796;
+      --success: #1cc88a;
+      --warning: #f6c23e;
+      --danger: #e74a3b;
+    }
 
-body {
-font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-background-color:var(--bg-color);
-margin:0;
-padding:40px;
-color:#333;
-}
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 40px;
+      color: #333;
+    }
 
-.container{
-max-width:900px;
-margin:auto;
-}
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
 
-.header-section{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:25px;
-}
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
 
-.search-box{
-padding:10px 15px;
-border:1px solid #d1d3e2;
-border-radius:20px;
-outline:none;
-}
+    .search-box {
+      padding: 10px 15px;
+      border: 1px solid #d1d3e2;
+      border-radius: 20px;
+      outline: none;
+    }
 
-.card{
-background:var(--white);
-border-radius:12px;
-box-shadow:0 0.15rem 1.75rem rgba(0,0,0,0.1);
-overflow:hidden;
-}
+    .card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 0.15rem 1.75rem rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
 
-table{
-width:100%;
-border-collapse:collapse;
-}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-th{
-background:#f8f9fc;
-color:var(--primary);
-font-size:13px;
-padding:18px;
-text-align:left;
-}
+    th {
+      background: #f8f9fc;
+      color: var(--primary);
+      font-size: 13px;
+      padding: 18px;
+      text-align: left;
+    }
 
-td{
-padding:15px 18px;
-border-bottom:1px solid #e3e6f0;
-}
+    td {
+      padding: 15px 18px;
+      border-bottom: 1px solid #e3e6f0;
+    }
 
-.badge{
-padding:6px 12px;
-font-size:11px;
-font-weight:bold;
-border-radius:20px;
-}
+    .badge {
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: bold;
+      border-radius: 20px;
+    }
 
-.status-in-progress{background:#fff4e5;color:#f6c23e;}
-.status-resolved{background:#e7f9ed;color:#1cc88a;}
-.status-pending{background:#ffeef0;color:#e74a3b;}
+    .status-in-progress {
+      background: #fff4e5;
+      color: #f6c23e;
+    }
 
-.id-text{
-font-weight:bold;
-color:var(--primary);
-}
+    .status-resolved {
+      background: #e7f9ed;
+      color: #1cc88a;
+    }
 
-.btn-back{
-text-decoration:none;
-font-size:14px;
-color:var(--gray);
-margin-bottom:15px;
-display:inline-block;
-}
-</style>
+    .status-pending {
+      background: #ffeef0;
+      color: #e74a3b;
+    }
+
+    .id-text {
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .btn-back {
+      text-decoration: none;
+      font-size: 14px;
+      color: var(--gray);
+      margin-bottom: 15px;
+      display: inline-block;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
+  <div class="container">
 
-<a href="dashboard.html" class="btn-back">← Back to Dashboard</a>
+    <a href="dashboard.html" class="btn-back">← Back to Dashboard</a>
 
-<div class="header-section">
-<h2>Track Your Complaints</h2>
-<input type="text" class="search-box" placeholder="Search by Title...">
-</div>
+    <div class="header-section">
+      <h2>Track Your Complaints</h2>
+      <input type="text" class="search-box" placeholder="Search by Title...">
+    </div>
 
-<div class="card">
+    <div class="card">
 
-<table>
+      <table>
 
-<thead>
-<tr>
-<th>Complaint ID</th>
-<th>Title</th>
-<th>Status</th>
-</tr>
-</thead>
+        <thead>
+          <tr>
+            <th>Complaint ID</th>
+            <th>Title</th>
+            <th>Status</th>
+          </tr>
+        </thead>
 
-<tbody id="complaintTable"></tbody>
+        <tbody id="complaintTable"></tbody>
 
-</table>
+      </table>
 
-</div>
+    </div>
 
-</div>
+  </div>
 
-<script type="module">
+  <script type="module">
+    import { db, collection, onSnapshot } from "./firebase.js";
 
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    const table = document.getElementById("complaintTable");
+    const complaintsRef = collection(db, "complaints");
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyAAG2bHKBAYBwoHr1m5RKMpI9HARx0TcWA",
-    authDomain: "cms01-d8400.firebaseapp.com",
-    projectId: "cms01-d8400",
-    storageBucket: "cms01-d8400.firebasestorage.app",
-    messagingSenderId: "761545517220",
-    appId: "1:761545517220:web:07bf15ee4825024fe35e31",
-    measurementId: "G-JLDZPMG4PE"
-  };
+    onSnapshot(complaintsRef, (snapshot) => {
+      table.innerHTML = "";
+      let index = 101;
 
+      snapshot.forEach((doc) => {
+        const data = doc.data();
 
+        let statusClass = "status-pending";
 
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+        if (data.status === "Resolved") {
+          statusClass = "status-resolved";
+        }
 
-const table = document.getElementById("complaintTable");
+        if (data.status === "In Progress") {
+          statusClass = "status-in-progress";
+        }
 
-const complaintsRef = ref(database,"complaints");
-
-onValue(complaintsRef,(snapshot)=>{
-
-table.innerHTML="";
-let index=101;
-
-snapshot.forEach((childSnapshot)=>{
-
-const data = childSnapshot.val();
-
-let statusClass="status-pending";
-
-if(data.status=="Resolved"){
-statusClass="status-resolved";
-}
-
-if(data.status=="In Progress"){
-statusClass="status-in-progress";
-}
-
-table.innerHTML += `
-<tr>
-<td class="id-text">#${index++}</td>
-<td>${data.title}</td>
-<td><span class="badge ${statusClass}">${data.status}</span></td>
-</tr>
-`;
-
-});
-
-});
-
-</script>
+        table.innerHTML += `
+    <tr>
+    <td class="id-text">#${index++}</td>
+    <td>${data.title}</td>
+    <td><span class="badge ${statusClass}">${data.status}</span></td>
+    </tr>
+    `;
+      });
+    });
+  </script>
 
 </body>
+
 </html>

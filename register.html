@@ -1,143 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register Complaint - CMS PRO</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Complaint - CMS PRO</title>
 
-<style>
-:root {
---primary: #4e73df;
---primary-hover: #2e59d9;
---bg-color: #f8f9fc;
---text-color: #333;
---gray: #858796;
---border-color: #d1d3e2;
---white: #ffffff;
-}
+  <style>
+    :root {
+      --primary: #4e73df;
+      --primary-hover: #2e59d9;
+      --bg-color: #f8f9fc;
+      --text-color: #333;
+      --gray: #858796;
+      --border-color: #d1d3e2;
+      --white: #ffffff;
+    }
 
-body{
-font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-background:var(--bg-color);
-margin:0;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-color);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-.form-container{
-background:var(--white);
-padding:40px;
-width:100%;
-max-width:420px;
-border-radius:15px;
-box-shadow:0 10px 25px rgba(0,0,0,0.1);
-}
+    .form-container {
+      background: var(--white);
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
 
-.back-link{
-text-decoration:none;
-font-size:14px;
-color:var(--gray);
-display:inline-block;
-margin-bottom:15px;
-}
+    .back-link {
+      text-decoration: none;
+      font-size: 14px;
+      color: var(--gray);
+      display: inline-block;
+      margin-bottom: 15px;
+    }
 
-h2{
-text-align:center;
-margin-bottom:25px;
-}
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
 
-label{
-display:block;
-margin-top:15px;
-font-size:12px;
-font-weight:bold;
-color:var(--gray);
-}
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--gray);
+    }
 
-input,select,textarea{
-width:100%;
-padding:12px;
-margin-top:8px;
-border:1px solid var(--border-color);
-border-radius:8px;
-}
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
 
-button{
-width:100%;
-padding:14px;
-margin-top:25px;
-background:var(--primary);
-color:white;
-border:none;
-border-radius:8px;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-}
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 25px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-button:hover{
-background:var(--primary-hover);
-}
-</style>
+    button:hover {
+      background: var(--primary-hover);
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="form-container">
+  <div class="form-container">
 
-<a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
 
-<h2>Register Complaint</h2>
+    <h2>Register Complaint</h2>
 
-<form id="complaintForm">
+    <form id="complaintForm">
 
-<label>Complaint Title</label>
-<input type="text" id="title" required>
+      <label>Complaint Title</label>
+      <input type="text" id="title" required>
 
-<label>Category</label>
-<select id="category" required>
-<option value="">Select Category</option>
-<option>Academic</option>
-<option>Hostel</option>
-<option>Infrastructure</option>
-<option>Transport</option>
-</select>
+      <label>Category</label>
+      <select id="category" required>
+        <option value="">Select Category</option>
+        <option>Academic</option>
+        <option>Hostel</option>
+        <option>Infrastructure</option>
+        <option>Transport</option>
+      </select>
 
-<label>Description</label>
-<textarea id="description" rows="4" required></textarea>
+      <label>Description</label>
+      <textarea id="description" rows="4" required></textarea>
 
-<button type="submit">Submit Complaint</button>
+      <button type="submit">Submit Complaint</button>
 
-</form>
+    </form>
 
-</div>
+  </div>
 
-<script type="module">
-  import { database, ref, push } from "./firebase.js";
+  <script type="module">
+    import { db, collection, addDoc } from "./firebase.js";
 
-  const form = document.getElementById("complaintForm");
+    const form = document.getElementById("complaintForm");
 
-  form.addEventListener("submit", function(e){
-    e.preventDefault();
-    
-    const complaintData = {
-      title: document.getElementById("title").value,
-      category: document.getElementById("category").value,
-      description: document.getElementById("description").value,
-      status: "Pending",
-      date: new Date().toLocaleString()
-    };
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-    push(ref(database, "complaints"), complaintData)
-      .then(() => {
+      const complaintData = {
+        title: document.getElementById("title").value,
+        category: document.getElementById("category").value,
+        description: document.getElementById("description").value,
+        status: "Pending",
+        date: new Date().toLocaleString()
+      };
+
+      try {
+        await addDoc(collection(db, "complaints"), complaintData);
         alert("✅ Complaint Submitted Successfully");
         form.reset();
-      })
-      .catch((error) => alert("Error: " + error.message));
-  });
-</script>
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    });
+  </script>
 
 </body>
+
 </html>
